@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trắc Nghiệm Pháp Luật Đại Cương - 100 Câu</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);min-height:100vh;color:#fff}
+.header{text-align:center;padding:40px 20px 20px;background:rgba(255,255,255,0.05);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,0.1)}
+.header h1{font-size:2rem;background:linear-gradient(90deg,#34d399,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.header p{color:rgba(255,255,255,0.6);font-size:0.95rem}
+.stats-bar{display:flex;justify-content:center;gap:30px;padding:15px;background:rgba(0,0,0,0.3);flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-size:1.5rem;font-weight:700;color:#34d399}
+.stat-lbl{font-size:0.75rem;color:rgba(255,255,255,0.5);text-transform:uppercase}
+.controls{display:flex;justify-content:center;gap:12px;padding:16px;flex-wrap:wrap}
+.btn{padding:10px 22px;border:none;border-radius:25px;cursor:pointer;font-size:0.9rem;font-weight:600;transition:all 0.3s}
+.btn-primary{background:linear-gradient(135deg,#34d399,#60a5fa);color:#fff}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,0.3)}
+.btn-outline{background:transparent;border:2px solid #34d399;color:#34d399}
+.btn-outline:hover{background:#34d399;color:#fff}
+.quiz-container{max-width:860px;margin:0 auto;padding:20px}
+.progress-bar{height:6px;background:rgba(255,255,255,0.1);border-radius:3px;margin-bottom:20px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#34d399,#60a5fa);transition:width 0.4s ease}
+.question-card{background:rgba(255,255,255,0.07);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:28px;margin-bottom:18px;transition:all 0.3s}
+.q-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+.q-num{background:linear-gradient(135deg,#34d399,#60a5fa);color:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0}
+.q-text{font-size:1rem;line-height:1.6;color:#e8e8ff;flex:1;margin-left:14px}
+.options{display:grid;gap:10px;margin-top:14px}
+.option{display:flex;align-items:center;padding:12px 16px;background:rgba(255,255,255,0.05);border:2px solid transparent;border-radius:12px;cursor:pointer;transition:all 0.25s;gap:12px}
+.option:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2)}
+.option.selected{border-color:#34d399;background:rgba(99,102,241,0.15)}
+.option.correct{border-color:#10b981;background:rgba(16,185,129,0.15)}
+.option.wrong{border-color:#ef4444;background:rgba(239,68,68,0.15)}
+.opt-badge{width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;flex-shrink:0;color:#ccc}
+.option.selected .opt-badge{background:#34d399;color:#fff}
+.option.correct .opt-badge{background:#10b981;color:#fff}
+.option.wrong .opt-badge{background:#ef4444;color:#fff}
+.opt-text{font-size:0.9rem;line-height:1.5;color:rgba(255,255,255,0.85)}
+.result-box{display:none;margin-top:10px;padding:10px 14px;border-radius:10px;font-size:0.85rem}
+.result-box.show{display:block}
+.result-correct{background:rgba(16,185,129,0.2);border:1px solid #10b981;color:#6ee7b7}
+.result-wrong{background:rgba(239,68,68,0.2);border:1px solid #ef4444;color:#fca5a5}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;align-items:center;justify-content:center}
+.modal.show{display:flex}
+.modal-box{background:linear-gradient(135deg,#1e1b4b,#312e81);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:40px;text-align:center;max-width:440px;width:90%}
+.modal-box h2{font-size:1.8rem;margin-bottom:8px;background:linear-gradient(90deg,#34d399,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.score-big{font-size:4rem;font-weight:800;color:#34d399;line-height:1}
+.score-lbl{color:rgba(255,255,255,0.6);margin-top:6px;margin-bottom:24px}
+.filter-tabs{display:flex;justify-content:center;gap:8px;padding:12px;flex-wrap:wrap}
+.tab{padding:8px 16px;border-radius:20px;border:1px solid rgba(255,255,255,0.2);background:transparent;color:rgba(255,255,255,0.7);cursor:pointer;font-size:0.85rem;transition:all 0.2s}
+.tab.active{background:linear-gradient(135deg,#34d399,#60a5fa);border-color:transparent;color:#fff}
+.empty{text-align:center;padding:60px;color:rgba(255,255,255,0.4)}
+.search-box{max-width:860px;margin:0 auto;padding:0 20px 12px}
+.search-input{width:100%;padding:12px 18px;border-radius:25px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.07);color:#fff;font-size:0.9rem;outline:none}
+.search-input::placeholder{color:rgba(255,255,255,0.3)}
+.search-input:focus{border-color:#34d399}
+.pagination{display:flex;justify-content:center;gap:8px;padding:20px;flex-wrap:wrap}
+.page-btn{width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,0.2);background:transparent;color:#fff;cursor:pointer;font-size:0.85rem;transition:all 0.2s}
+.page-btn:hover,.page-btn.active{background:linear-gradient(135deg,#34d399,#60a5fa);border-color:transparent}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>🎓 Trắc Nghiệm Pháp Luật Đại Cương - 100 Câu</h1>
+  <p>Bộ câu hỏi tổng hợp môn Pháp luật đại cương</p>
+</div>
+<div class="stats-bar">
+  <div class="stat"><div class="stat-num" id="totalQ">0</div><div class="stat-lbl">Tổng câu</div></div>
+  <div class="stat"><div class="stat-num" id="answeredQ">0</div><div class="stat-lbl">Đã trả lời</div></div>
+  <div class="stat"><div class="stat-num" id="correctQ" style="color:#10b981">0</div><div class="stat-lbl">Đúng</div></div>
+  <div class="stat"><div class="stat-num" id="wrongQ" style="color:#ef4444">0</div><div class="stat-lbl">Sai</div></div>
+  <div class="stat"><div class="stat-num" id="pctQ">0%</div><div class="stat-lbl">Tỷ lệ đúng</div></div>
+</div>
+<div class="controls">
+  <button class="btn btn-primary" onclick="submitAll()">✅ Nộp bài</button>
+  <button class="btn btn-outline" onclick="resetAll()">🔄 Làm lại</button>
+  <button class="btn btn-outline" onclick="shuffleQuestions()">🔀 Trộn câu</button>
+  <button class="btn btn-outline" onclick="showAll()">📋 Hiện đáp án</button>
+</div>
+<div class="filter-tabs">
+  <button class="tab active" onclick="filterTab('all',this)">Tất cả</button>
+  <button class="tab" onclick="filterTab('unanswered',this)">Chưa trả lời</button>
+  <button class="tab" onclick="filterTab('correct',this)">Đúng</button>
+  <button class="tab" onclick="filterTab('wrong',this)">Sai</button>
+</div>
+<div class="search-box">
+  <input class="search-input" id="searchInput" placeholder="🔍 Tìm kiếm câu hỏi..." oninput="handleSearch()">
+</div>
+<div class="progress-bar" style="max-width:860px;margin:0 auto 4px;padding:0 20px">
+  <div style="height:6px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden">
+    <div class="progress-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+<div class="quiz-container" id="quizContainer"></div>
+<div class="pagination" id="pagination"></div>
+<div class="modal" id="resultModal">
+  <div class="modal-box">
+    <h2>📊 Kết Quả</h2>
+    <div class="score-big" id="modalScore">0</div>
+    <div class="score-lbl" id="modalDetail"></div>
+    <div style="margin-bottom:20px;font-size:2rem" id="modalEmoji">🎉</div>
+    <button class="btn btn-primary" onclick="closeModal()" style="width:100%">Xem lại bài</button>
+    <button class="btn btn-outline" onclick="resetAll()" style="width:100%;margin-top:10px">Làm lại</button>
+  </div>
+</div>
+<script>
+const QUESTIONS = [
+  {q:"Quan niệm “ quyền lực nhà nước là do nhân dân trong xã hội thỏa thuận",o:{A:"Khế ước xã hội",B:"Gia trưởng",C:"Thần quyền",D:"Mác Lênin"},a:null},
+  {q:"Tảo hôn là gì:",o:{A:"Là việc lấy vợ, lấy chồng khi một bên hoặc cả hai bên chưa đủ tuổi kết hôn",B:"Là việc lấy vợ, lấy chồng khi một bên bị lừa dối",C:"Là việc lấy vợ, lấy chồng khi một bên bị cưỡng ép, ép buộc",D:"Là việc lấy vợ, lấy chồng khi cả hai bên chưa đủ tuổi kết hôn theo quy định pháp"},a:null},
+  {q:"Bản chất xã hội của nhà nước thể hiện:",o:{A:"Nhà nước là công cụ sắc bén để duy trì sự thống trị giai cấp",B:"Nhà nước là bộ máy nhằm bảo đảm trật tự an toàn xã hội và đảm đương các",C:"Nhà nước là bộ máy cưỡng chế đặc biệt nằm trong tay giai cấp cầm quyền",D:"Nhà nước là công cụ của đa số nhân dân lao động sử dụng để trấn áp lại thiếu số,"},a:null},
+  {q:"Dựa trên lý luận về nhà nước, Hiệp hội ASEAN được gọi là?",o:{A:"Một tổ chức quốc tế",B:"Một hình thức nhà nước",C:"Nhà nước liên bang",D:"Một nhà nước thống nhất"},a:null},
+  {q:"Thuộc tính cơ bản của Pháp luật là:",o:{A:"Tính được nhà nước bảo đảm thực hiện",B:"Tính xác định chặt chẽ về hình thức",C:"Tính quy phạm phổ biến",D:"Tất cả đều đúng"},a:null},
+  {q:"Tính cưỡng chế của pháp luật được thể hiện thông qua:",o:{A:"Những hành vi vi phạm pháp luật đều bị xử phạt hành chính",B:"Những hành vi vi phạm pháp luật đều bị áp dụng hình phạt",C:"Những hành vi vi phạm pháp luật đều có thể bị áp dụng chế tài",D:"Những hành vi vi phạm pháp luật đều bị xử lý kỷ luật"},a:null},
+  {q:"Văn bản nào sau đây không phải là văn bản quy phạm pháp luật:",o:{A:"Điều lệ của Đảng Cộng sản",B:"Quyết định của Thủ tướng Chính phủ",C:"Nghị quyết của Quốc hội",D:"Hiến pháp"},a:null},
+  {q:"Theo quy định của Bộ luật Dân sự hiện hành, thừa kế bao gồm:",o:{A:"Thừa kế theo ý chí của người mất",B:"Thừa kế theo di chúc",C:"Thừa kế theo pháp luật",D:"Thừa kế theo di chúc; thừa kế theo pháp luật"},a:null},
+  {q:"Hình thức biểu hiện bên ngoài của hệ thống pháp luật là:",o:{A:"Các văn bản quy phạm pháp luật",B:"Các quy phạm pháp luật",C:"Các loại văn bản luật",D:"Các ngành luật"},a:null},
+  {q:"Quan hệ xã hội trở thành quan hệ pháp luật thì cần phải có:",o:{A:"Chủ thể và khách thể quan hệ pháp luật",B:"Nghĩa vụ quy định trong quy phạm pháp luật",C:"Quy phạm pháp luật và sự kiện pháp lý",D:"Sự điều chỉnh của pháp luật"},a:null},
+  {q:"Chủ thể của quan hệ pháp luật bao gồm:",o:{A:"Cá nhân hay tổ chức có năng lực chủ thể tham gia vào quan hệ pháp luật",B:"Nhà nước, tất cả mọi cá nhân và tổ chức trong xã hội",C:"Những cá nhân từ đủ 18 tuổi trở lên và có trí óc bình thường",D:"Những tổ chức có tiềm lực kinh tế"},a:null},
+  {q:"Khách thể của quan hệ pháp luật là:",o:{A:"Các lợi ích xã hội khác",B:"Lợi ích vật chất mà các chủ thể của quan hệ đó hướng tới khi tham gia quan hệ",C:"Lợi ích cá nhân, lợi ích xã hội",D:"Các lợi ích về vật chất và tinh thần"},a:null},
+  {q:"Những quy tắc xử sự chung do nhà nước ban hành và bảo đảm thực",o:{A:"Quy phạm luật pháp",B:"Quy phạm pháp luật",C:"Quy phạm xã hội",D:"Văn bản pháp luật"},a:null},
+  {q:"Cơ quan có thẩm quyền ra quyết định xử phạt gia đình bà K về hành vi",o:{A:"Tuân thủ pháp luật",B:"Thi hành pháp luật",C:"Áp dụng pháp luật",D:"Sử dụng pháp luật"},a:null},
+  {q:"Trách nhiệm dân sự là trách nhiệm của chủ thể trước:",o:{A:"Người bị thiệt hại",B:"Bên kia",C:"Cơ quan nhà nước",D:"Tất cả đều đúng"},a:null},
+  {q:"Do thù hận bố bé T vì tranh chấp đất đai giữa hai gia đình, H (nghiện",o:{A:"Vi phạm kỷ luật",B:"Vi phạm hành chính",C:"Vi phạm hình sự",D:"Tất cả đều sai"},a:null},
+  {q:"Nhận định nào sau đây là ĐÚNG về Chính phủ ở Việt Nam:",o:{A:"Là cơ quan quyền lực nhà nước cao nhất",B:"Là cơ quan đại diện nhân dân",C:"Là cơ quan giữ quyền ban hành các văn bản Luật",D:"Là cơ quan hành chính nhà nước cao nhất"},a:null},
+  {q:"Cơ quan nào sau đây KHÔNG có quyền xử phạt vi phạm hành chính:",o:{A:"Thuế",B:"Hải quan",C:"Viện kiểm sát",D:"Công an"},a:null},
+  {q:"Cơ quan nào sau đây có quyền xử phạt vi phạm hành chính:",o:{A:"Tổng cục thuế",B:"Tổng cục thống kê",C:"Tổng liên đoàn lao động Việt Nam.",D:"Viện kiểm sát"},a:null},
+  {q:"Nơi nào là nơi",o:{A:"Đơn vị sự nghiệp công lập",B:"Tổ chức chính trị xã hội",C:"Cơ quan Đảng",D:"Các cơ quan tư pháp"},a:null},
+  {q:"Biện pháp nào sau đây vừa là hình thức xử phạt chính, vừa là hình thức",o:{A:"Buộc tháo dỡ công trình xây dựng trái phép",B:"Phạt tiền",C:"Tước quyền sử dụng giấy phép",D:"Cảnh cáo"},a:null},
+  {q:"Câu nào sau đây là SAI để một tổ chức được công nhận là pháp nhân:",o:{A:"Được thành lập hợp pháp",B:"Có cơ cấu tổ chức chặt chẽ",C:"Không có sự độc lập về tài sản",D:"Nhân danh mình tham gia các quan hệ pháp luật một cách độc lập."},a:null},
+  {q:"Hợp đồng dân sự có hiệu lực tại thời điểm:",o:{A:"Hai bên ký vào hợp đồng",B:"Do hai bên thỏa thuận",C:"Giao kết hợp đồng, trừ trường hợp có thỏa thuận khác hoặc pháp luật có",D:"Khi hai bên thực hiện xong nghĩa vụ ghi trong hợp đồng."},a:null},
+  {q:"Chủ thể nào sau đây có tư cách pháp nhân:",o:{A:"Hộ gia đình",B:"Tổ hợp tác",C:"Công ty Cổ phần",D:"Doanh nghiệp tư nhân"},a:null},
+  {q:"Người chồng không có quyền ly hôn khi:",o:{A:"Vợ nuôi con nhỏ dưới 12 tháng tuổi",B:"Vợ bị bệnh tâm thần",C:"Vợ bị mất khả năng lao động",D:"Tất cả đều đúng"},a:null},
+  {q:"Con từ bao nhiêu tuổi trở lên thì phải xem xét nguyện vọng của con:",o:{A:"Đủ 9 tuổi",B:"Đủ 12 tuổi",C:"Đủ 7 tuổi",D:"Đủ 15 tuổi"},a:null},
+  {q:"Hoà giải cơ sở là thủ tục........trước khi vợ chồng yêucầu ly hôn tại Toà án:",o:{A:"Luật định",B:"Bắt buộc",C:"Khuyến khích",D:"Cần thiết"},a:null},
+  {q:"Nhận định nào sau đây là đúng:",o:{A:"Tài sản chung của vợ chồng mà phải đăng kí quyền sở hữu thì trong giấy",B:"Mọi tài sản mà vợ hoặc chồng tạo dựng trong thời kỳ hôn nhân đều là tài sản",C:"Con nuôi và con đẻ không được kết hôn với nhau.",D:"Tài sản chung của vợ chồng phải là tài sản có trong thời kì hôn nhân"},a:null},
+  {q:"Hợp đồng lao động xác định thời hạn là hợp đồng mà trong đó hai bên",o:{A:"30 tháng",B:"24 tháng",C:"36 tháng",D:"12 tháng"},a:null},
+  {q:"Thời hiệu xử lý kỷ luật lao động tối đa là bao nhiêu tháng kể từ ngày",o:{A:"3 tháng",B:"4 tháng",C:"5 tháng",D:"6 tháng"},a:null},
+  {q:"Thời gian thử việc không quá bao nhiêu ngày đối với công việc có chức",o:{A:"30 ngày",B:"40 ngày",C:"60 ngày",D:"90 ngày"},a:null},
+  {q:"Người lao động làm thêm giờ vào ngày nghỉ hàng năm được trả lương ít",o:{A:"150%",B:"200%",C:"250%",D:"300%"},a:null},
+  {q:"Không phải chịu trách nhiệm hình sự khi:",o:{A:"Sự kiện bất ngờ",B:"Phòng vệ chính đáng",C:"Tình thế cấp thiết",D:"Tất cả đều đúng"},a:null},
+  {q:"Cô Long bị truy cứu trách nhiệm hình sự với tội danh “từ chối hoặc",o:{A:"Ít nghiêm trọng",B:"Nghiêm trọng",C:"Đặc biệt nghiêm trọng",D:"Rất nghiêm trọng"},a:null},
+  {q:"Cá nhân vì muốn bảo vệ lợi ích cho bản thân mình, của người khác",o:{A:"Tình thế cấp thiết",B:"Sự kiện bất ngờ",C:"Phòng vệ chính đáng",D:"Tất cả đều đúng"},a:null},
+  {q:"Chứng kiến bố ruột của mình bị A tấn công, đánh đập dã man, B đã",o:{A:"Phòng vệ chính đáng",B:"Sự kiện bất ngờ",C:"Tình thế cấp thiết",D:"Vượt quá giới hạn phòng vệ chính đáng"},a:null},
+  {q:"A thực hiện hành vi phạm tội giết người, cướp tài sản vào thời điểm",o:{A:"30 năm tù giam",B:"20 năm tù giam",C:"18 năm tù giam",D:"Tù chung thân"},a:null},
+  {q:"Giai đoạn nào sau đây thuộc về tố tụng hình sự:",o:{A:"Khởi tố",B:"Điều tra",C:"Truy tố",D:"Tất cả đều đúng"},a:null},
+  {q:"Ngày 20/5/2011, Tòa án nhân dân huyện A tuyên bản án sơ thẩm. Ngày",o:{A:"Sơ thẩm",B:"Phúc thẩm",C:"Giám đốc thẩm",D:"Tái thẩm"},a:null},
+  {q:"\"Tái thẩm\" là:",o:{A:"Xem xét lại bản án đã có hiệu lực bị kháng nghị",B:"Xem xét lại bản án chưa có hiệu lực pháp luật",C:"Xem xét lại bản án đã có hiệu lực bị kháng cáo",D:"Xem xét lại bản án đã có hiệu lực bị kháng cáo, kháng nghị"},a:null},
+  {q:"Tòa án quyết định đưa A ra xét xử về hành vi tổ chức đánh bạc. Lúc",o:{A:"Bị can",B:"Bị cáo",C:"Người phạm tội",D:"Người vi phạm pháp luật hình sự"},a:null},
+  {q:"Quyền được khai thác công dụng, hưởng hoa lợi, lợi tức từ tài sản là:",o:{A:"Quyền sử dụng",B:"Quyền chiếm hữu",C:"Quyền định đoạt",D:"Tất cả đều sai"},a:null},
+  {q:"Luật Dân sự là một ngành luật độc lập trong hệ thống pháp luật Việt",o:{A:"Luật Dân sự có đối tượng và phương pháp điều chỉnh riêng biệt",B:"Luật Dân sự có đối tượng điều chỉnh riêng biệt",C:"Luật Dân sự là ngành luật lớn",D:"Luật Dân sự có phương pháp điều chỉnh riêng biệt"},a:null},
+  {q:"Người từ đủ 14 tuổi đến dưới 16 tuổi vi phạm hành chính:",o:{A:"Không bị xử phạt vi phạm hành chính",B:"Bị xử phạt vi phạm hành chính về vi phạm hành chính do vô ý",C:"Bị xử phạt vi phạm hành chính về mọi vi phạm hành chính",D:"Bị xử phạt vi phạm hành chính về vi phạm hành chính do cố ý"},a:null},
+  {q:"Nhà nước do giai cấp thống trị lập nên để bảo vệ",o:{A:"Thần học",B:"Gia trưởng",C:"Khế ước xã hội",D:"Mác-Lênin"},a:null},
+  {q:"Bản chất của Nhà nước chính là:",o:{A:"Tính giai cấp",B:"Tính xã hội",C:"A và B đúng",D:"Không có thuộc tính nào"},a:null},
+  {q:"Tổ chức có quyền lực công là:",o:{A:"Nhà nước",B:"Đoàn thanh niên Cộng sản Hồ Chí Minh",C:"Các tổ chức xã hội",D:"Công ty"},a:null},
+  {q:"Sự thay thế kiểu Nhà nước sau đối với kiểu Nhà nước trước trong lịch",o:{A:"Quyền lực xã hội",B:"Dân chủ xã hội",C:"Chủ quan cá nhân",D:"Tất yếu khách quan"},a:null},
+  {q:"Sự thay thế kiểu Nhà nước trong xã hội được thực hiện bằng:",o:{A:"Cuộc cách mạng xã hội",B:"Quyền lực cá nhân",C:"Đấu tranh chính trị",D:"Thương lượng hòa bình"},a:null},
+  {q:"Kiểu Nhà nước nào do giai cấp thống trị thiểu số trong xã hội lập ra:",o:{A:"Phong kiến",B:"Chủ nô",C:"Chủ nô và phong kiến",D:"Xã hội chủ nghĩa"},a:null},
+  {q:"Nguyên nhân nào dẫn đến sự ra đời của nhà nước:",o:{A:"Cả hai đều sai",B:"Nguyên nhân kinh tế",C:"Nguyên nhân xã hội",D:"Cả hai đều đúng"},a:null},
+  {q:"Chức năng của Nhà nước bao gồm:",o:{A:"Chức năng đối nội và đối ngoại",B:"Chức năng lập pháp",C:"Tất cả đều sai",D:"Chức năng hành pháp"},a:null},
+  {q:"Tổng thể những phương pháp và thủ đoạn mà giai cấp thống trị sử",o:{A:"Hình thức chính thể",B:"Hình thức nhà nước",C:"Chế độ chính trị",D:"Hình thức cấu trúc của Nhà nước"},a:null},
+  {q:"Sự cấu tạo nhà nước thành các đơn vị hành chính lãnh thổ và xác lập",o:{A:"Hình thức cấu trúc nhà nước",B:"Hình thức chính thể",C:"Chế độ chính trị",D:"Hình thức nhà nước"},a:null},
+  {q:"Hình thức cấu trúc Nhà nước đơn nhất có đặc điểm:",o:{A:"Có ba hệ thống pháp luật",B:"Có hai hệ thống cơ quan Nhà nước",C:"Cả 2 đáp án đều sai",D:"Cả 2 đáp án đều đúng"},a:null},
+  {q:"Điều kiện nào sau đây là điều kiện của trường hợp tự ý nửa chừng",o:{A:"Tự mình không thực hiện tội phạm đến cùng, tuy không có gì ngăn cản",B:"Hành vi phạm tội chưa gây ra thiệt hại",C:"Không thực hiện tội phạm đến cùng vì nạn nhân chống trả",D:"Hành vi phạm tội đã gặp phải trở ngại khách quan"},a:null},
+  {q:"Khoa pháp lý hình sự phân loại bao nhiêu hình thức lỗi:",o:{A:"3",B:"5",C:"4",D:"2"},a:null},
+  {q:"Thời hiệu truy cứu trách nhiệm hình sự được tính từ thời điểm nào:",o:{A:"Từ ngày tội phạm được thực hiện",B:"Từ ngày tội phạm bị phát hiện, bắt giữ",C:"Từ ngày người phạm tội ra tự thú, đầu thú",D:"Từ ngày cơ quan có thẩm quyền ra quyết định truy nã"},a:null},
+  {q:"Đối với mỗi tội",o:{A:"Một hình phạt chính",B:"Một hình phạt chính và một hình phạt bổ sung",C:"Một hình phạt chính và có thể bị áp dụng một hoặc một số hình phạt bổ sung",D:"Tất cả đều sai"},a:null},
+  {q:"Nhận định nào dưới đây KHÔNG ĐÚNG về Luật Hình sự:",o:{A:"Là một ngành luật trong hệ thống pháp luật của nước CHXHCN Việt Nam",B:"Bao gồm hệ thống những quy phạm pháp luật do nhà nước ban hành.",C:"Là một văn bản trong hệ thống pháp luật của nước CHXHCN Việt Nam.",D:"Xác định những hành vi nguy hiểm nào cho xã hội là tội phạm đồng thời quy định"},a:null},
+  {q:"Hình phạt nào sau đây vừa là hình phạt chính vừa là hình phạt bổ sung",o:{A:"Phạt tiền",B:"Cảnh cáo",C:"Cảnh cáo và phạt tiền",D:"Trục xuất"},a:null},
+  {q:"Nhà nước quân chủ hạn chế là nhà nước:",o:{A:"Quyền lực nhà nước tối cao thuộc về một cơ quan tập thể và được hình thành theo",B:"Quyền lực nhà nước được phân chia cho người đứng đầu nhà nước theo",C:"Quyền lực nhà nước tối cao thuộc về một cơ quan tập thể do bầu cử mà ra",D:"Quyền lực nhà nước thuộc về một tập thể gồm những người quý tộc và được hình"},a:null},
+  {q:"Khi nghiên cứu về chức năng của nhà nước, khẳng định nào sau đây là",o:{A:"Chức năng đối ngoại giữ vai trò quan trọng hơn chức năng đối nội",B:"Chức năng đối nội và chức năng đối ngoại là quan trọng như nhau",C:"Chức năng đối nội của nhà nước là cơ sở cho việc thực hiện chức năng đối ngoại",D:"Kết quả của việc thực hiện chức năng đối ngoại có tác động đến việc thực hiện"},a:null},
+  {q:"Luật Hôn nhân và gia đình năm 2014:",o:{A:"Chỉ quy định chế độ tài sản vợ chồng theo luật định",B:"Chỉ quy định chế độ tài sản vợ chồng theo thỏa thuận",C:"Không có quy định về chế độ tài sản vợ chồng",D:"Quy định chế độ tài sản vợ chồng vừa theo luật định, vừa theo thỏa thuận"},a:null},
+  {q:"Người được tuyển dụng, bổ nhiệm vào ngạch, chức vụ, chức danh",o:{A:"Công chức",B:"Cán bộ",C:"Viên chức",D:"Người lao động"},a:null},
+  {q:"Quan hệ nào sau đây được xác định là quan hệ pháp luật hành chính:",o:{A:"Quan hệ giữa UBND và người dân khi liên hệ xác nhận cư trú",B:"Quan hệ giữa nhân viên và giám đốc công ty trong thực hiện công việc nội bộ",C:"Quan hệ giữa người phạm tội và cơ quan thi hành án hình sự",D:"Quan hệ giữa giảng viên và sinh viên"},a:null},
+  {q:"Đâu là đối tượng điều chỉnh của Luật hành chính:",o:{A:"Quan hệ phát sinh giữa Nhà nước và người phạm tội",B:"Quan hệ phát sinh trong hoạt động quản lý hành chính Nhà nước",C:"Quan hệ nhân thân hoặc tài sản giữa cá nhân, pháp nhân",D:"Quan hệ giữa người lao động và người sử dụng lao động"},a:null},
+  {q:"Ý nào dưới đây KHÔNG PHẢI nguyên tắc xử phạt vi phạm hành",o:{A:"Một hành vi vi phạm hành chính chỉ bị xử phạt một lần",B:"Mức phạt tiền đối với hành vi vi phạm được áp dụng đối với cá nhân và tổ",C:"Nhiều người cùng thực hiện một hành vi vi phạm hành chính thì mỗi người vi",D:"Một người thực hiện nhiều hành vi vi phạm hành chính hoặc vi phạm hành chính"},a:null},
+  {q:"Cơ quan nào KHÔNG PHẢI là cơ quan tố tụng hành chính:",o:{A:"Viện kiểm sát",B:"Cơ quan điều tra",C:"Tòa án nhân dân",D:"Tất cả đều đúng"},a:null},
+  {q:"Phương pháp điều chỉnh của Luật hành chính là:",o:{A:"Phương pháp mệnh lệnh quyền uy",B:"Phương pháp mệnh lệnh quyền uy và phương pháp thỏa thuận",C:"Phương pháp thỏa thuận.",D:"Phương pháp phối hợp – chế ước"},a:null},
+  {q:"Quan hệ nào sau đây thuộc đối tượng điều chỉnh của Luật dân sự:",o:{A:"Quan hệ giữa cơ quan tiến hành tố tụng dân sự và nguyên đơn",B:"Quan hệ xử phạt vi phạm giữa cảnh sát giao thông và người tham gia giao thông",C:"Quan hệ giữa các chủ thể có tranh chấp về quyền sử dụng đất",D:"Quan hệ giữa người lao động và người sử dụng lao động trong quá trình làm việc"},a:null},
+  {q:"Đâu KHÔNG PHẢI là nguyên tắc cơ bản của Luật Dân sự",o:{A:"Cá nhân, pháp nhân xác lập, thực hiện, chấm dứt quyền, nghĩa vụ dân",B:"Mọi cá nhân, pháp nhân đều bình đẳng, không được lấy bất kỳ lý do nào để",C:"Cá nhân, pháp nhân phải xác lập, thực hiện, chấm dứt quyền, nghĩa vụ dân sự của",D:"Việc xác lập, thực hiện, chấm dứt quyền, nghĩa vụ dân sự không được xâm phạm"},a:null},
+  {q:"Có những hình thức sở hữu nào theo quy định của Bộ luật Dân sự năm",o:{A:"Sở hữu toàn dân",B:"Sở hữu riêng",C:"Sở hữu chung",D:"Tất cả đều đúng"},a:null},
+  {q:"Để giao dịch dân sự có hiệu lực, điều kiện nào dưới đây chưa đáp ứng:",o:{A:"Chủ thể chỉ cần phải có năng lực pháp luật dân sự",B:"Chủ thể tham gia giao dịch dân sự hoàn toàn tự nguyện",C:"Mục đích và nội dung của giao dịch dân sự không vi phạm điều cấm của luật,",D:"Phải đáp ứng điều kiện về hình thức trong trường hợp luật quy định hình thức bắt"},a:null},
+  {q:"“Việc một bên giao tài sản thuộc quyền sở hữu của mình cho bên kia để",o:{A:"Cầm giữ tài sản",B:"Thế chấp",C:"Bảo lãnh",D:"Cầm cố"},a:null},
+  {q:"Trường hợp nào dưới đây không áp dụng tạm hoãn thực hiện hợp đồng",o:{A:"Do hai bên thỏa thuận",B:"Người lao động thực hiện nghĩa vụ quân sự",C:"Người lao động nữ sinh con",D:"Người lao động bị tạm giữ, tạm giam theo quy định pháp luật tố tụng hình sự"},a:null},
+  {q:"Hợp đồng lao động chấm dứt trong trường hợp:",o:{A:"Một trong các bên đơn phương chấm dứt",B:"Các bên thoả thuận chấm dứt",C:"Hết hạn hợp đồng đối với hợp đồng xác định thời hạn, người lao động chết",D:"Tất cả đều đúng"},a:null},
+  {q:"Đâu KHÔNG PHẢI quyền của người lao động được pháp luật lao động",o:{A:"Đơn phương chấm dứt hợp đồng lao động không cần báo trước trong mọi",B:"Tự do lựa chọn việc làm",C:"Không bị phân biệt đối xử, cưỡng bức lao động, quấy rối tình dục tại nơi làm việc",D:"Từ chối làm việc nếu có nguy cơ rõ ràng đe dọa trực tiếp đến tính mạng, sức"},a:null},
+  {q:"Tranh chấp nào sau đây KHÔNG thuộc thẩm quyền giải quyết của",o:{A:"Tranh chấp về quyền sở hữu tài sản",B:"Tranh chấp về quyết định xử lý kỷ luật buộc thôi việc đối với công chức",C:"Tranh chấp về bồi thường thiệt hại ngoài hợp đồng",D:"Tranh chấp về xử lý luật lao động theo hình thức sa thải"},a:null}
+];
+const PAGE_SIZE = 20;
+let userAnswers = {};
+let revealed = {};
+let currentFilter = 'all';
+let currentSearch = '';
+let currentPage = 1;
+let filtered = [];
+
+function getFiltered() {
+  let qs = QUESTIONS.map((q,i)=>({...q,idx:i}));
+  if(currentFilter==='unanswered') qs=qs.filter(q=>!userAnswers[q.idx]);
+  else if(currentFilter==='correct') qs=qs.filter(q=>userAnswers[q.idx]&&q.a&&userAnswers[q.idx]===q.a);
+  else if(currentFilter==='wrong') qs=qs.filter(q=>userAnswers[q.idx]&&q.a&&userAnswers[q.idx]!==q.a);
+  if(currentSearch) qs=qs.filter(q=>q.q.toLowerCase().includes(currentSearch.toLowerCase()));
+  return qs;
+}
+
+function render() {
+  filtered = getFiltered();
+  const totalPages = Math.max(1, Math.ceil(filtered.length/PAGE_SIZE));
+  if(currentPage>totalPages) currentPage=1;
+  const pageItems = filtered.slice((currentPage-1)*PAGE_SIZE, currentPage*PAGE_SIZE);
+  
+  const container = document.getElementById('quizContainer');
+  if(pageItems.length===0){container.innerHTML='<div class="empty">Không có câu hỏi phù hợp</div>';return;}
+  
+  container.innerHTML = pageItems.map((q,pi)=>{
+    const qi = q.idx;
+    const ua = userAnswers[qi];
+    const rv = revealed[qi];
+    const opts = ['A','B','C','D'].filter(k=>q.o[k]);
+    
+    return `<div class="question-card" id="qcard-${qi}">
+      <div class="q-header">
+        <div class="q-num">${(currentPage-1)*PAGE_SIZE+pi+1}</div>
+        <div class="q-text">${q.q}</div>
+      </div>
+      <div class="options">
+        ${opts.map(k=>{
+          let cls='option';
+          if(ua===k){
+            if(rv||q.a){cls+= (q.a&&k===q.a)?' correct':' wrong';}
+            else cls+=' selected';
+          } else if((rv||q.a)&&q.a&&k===q.a) cls+=' correct';
+          return `<div class="${cls}" onclick="choose(${qi},'${k}')" id="opt-${qi}-${k}">
+            <div class="opt-badge">${k}</div>
+            <div class="opt-text">${q.o[k]}</div>
+          </div>`;
+        }).join('')}
+      </div>
+      ${(ua&&q.a)?`<div class="result-box show ${ua===q.a?'result-correct':'result-wrong'}">${ua===q.a?'✅ Chính xác!':'❌ Sai rồi! Đáp án đúng: <strong>'+q.a+'</strong>'}</div>`:''}</div>`;
+  }).join('');
+  
+  renderPagination(totalPages);
+  updateStats();
+}
+
+function renderPagination(total) {
+  const p = document.getElementById('pagination');
+  if(total<=1){p.innerHTML='';return;}
+  let html='';
+  for(let i=1;i<=total;i++) html+=`<button class="page-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+  p.innerHTML=html;
+}
+
+function goPage(n){currentPage=n;render();window.scrollTo(0,0);}
+
+function choose(qi, key){
+  if(revealed[qi]) return;
+  userAnswers[qi]=key;
+  render();
+}
+
+function updateStats(){
+  const total=QUESTIONS.length;
+  const answered=Object.keys(userAnswers).length;
+  const correct=QUESTIONS.filter((q,i)=>q.a&&userAnswers[i]===q.a).length;
+  const wrong=QUESTIONS.filter((q,i)=>q.a&&userAnswers[i]&&userAnswers[i]!==q.a).length;
+  const pct=answered>0?Math.round(correct/answered*100):0;
+  document.getElementById('totalQ').textContent=total;
+  document.getElementById('answeredQ').textContent=answered;
+  document.getElementById('correctQ').textContent=correct;
+  document.getElementById('wrongQ').textContent=wrong;
+  document.getElementById('pctQ').textContent=pct+'%';
+  document.getElementById('progressFill').style.width=(answered/total*100)+'%';
+}
+
+function filterTab(f, el){
+  currentFilter=f; currentPage=1;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+function handleSearch(){
+  currentSearch=document.getElementById('searchInput').value;
+  currentPage=1; render();
+}
+
+function submitAll(){
+  const total=QUESTIONS.length;
+  const answered=Object.keys(userAnswers).length;
+  const withAns=QUESTIONS.filter((q,i)=>q.a).length;
+  const correct=QUESTIONS.filter((q,i)=>q.a&&userAnswers[i]===q.a).length;
+  if(answered<total*0.5 && !confirm('Bạn mới trả lời '+answered+'/'+total+' câu. Tiếp tục nộp bài?')) return;
+  QUESTIONS.forEach((_,i)=>revealed[i]=true);
+  const pct=withAns>0?Math.round(correct/withAns*100):0;
+  document.getElementById('modalScore').textContent=pct+'%';
+  document.getElementById('modalDetail').textContent=correct+'/'+withAns+' câu đúng';
+  document.getElementById('modalEmoji').textContent=pct>=80?'🏆':pct>=60?'👍':'📚';
+  document.getElementById('resultModal').classList.add('show');
+  render();
+}
+
+function closeModal(){document.getElementById('resultModal').classList.remove('show');}
+
+function resetAll(){
+  userAnswers={};revealed={};
+  closeModal();currentFilter='all';currentPage=1;
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===0));
+  render();
+}
+
+function shuffleQuestions(){
+  for(let i=QUESTIONS.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [QUESTIONS[i],QUESTIONS[j]]=[QUESTIONS[j],QUESTIONS[i]];
+  }
+  userAnswers={};revealed={};currentPage=1;render();
+}
+
+function showAll(){
+  QUESTIONS.forEach((_,i)=>revealed[i]=true);
+  render();
+}
+
+render();
+</script>
+</body>
+</html>
